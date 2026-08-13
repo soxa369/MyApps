@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+    <meta charset="UTF-8">
+    <title>Slot Machine - Manager</title>
+    <style>
+        body { 
+            font-family: 'Saysettha OT', 'Phetsarath OT', 'Times New Roman', Times, serif, sans-serif; 
+            text-align: center; padding: 20px;
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+            background-size: cover; background-position: center; min-height: 100vh;
+            margin: 0; box-sizing: border-box;
+        }
+        .content-wrapper { 
+            background-color: rgba(255, 255, 255, 0.92); padding: 30px; border-radius: 15px; 
+            display: inline-block; max-width: 500px; width: 90%; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-top: 20px;
+        }
+        h1 { font-size: 28px; color: #333; margin-top: 0; }
+        #slot { 
+            font-size: 26px; font-weight: bold; margin: 20px 0; padding: 20px; 
+            border: 3px solid #ff4500; border-radius: 10px; color: #ff4500; 
+            background-color: #fff; min-height: 40px; display: flex;
+            align-items: center; justify-content: center; transition: transform 0.2s;
+        }
+        button { cursor: pointer; padding: 8px 12px; border-radius: 5px; border: none; margin: 2px; }
+        .spin-btn { 
+            background-color: #ff4500; color: white; font-size: 20px; font-weight: bold;
+            width: 100%; padding: 12px; border-radius: 25px;
+        }
+        .manage-section { margin-top: 30px; border-top: 2px dashed #ccc; padding-top: 20px; text-align: left; }
+        .input-group { display: flex; gap: 5px; margin-bottom: 15px; }
+        .input-group input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        .input-group button { background-color: #28a745; color: white; font-weight: bold; }
+        ul { list-style: none; padding: 0; max-height: 250px; overflow-y: auto; margin: 0; border: 1px solid #eee; }
+        li { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid #eee; background-color: #fff; }
+        .edit-btn { background-color: #ffc107; color: #000; }
+        .del-btn { background-color: #dc3545; color: white; }
+        .home-btn { 
+        display: inline-block; 
+        margin-bottom: 15px; 
+        text-decoration: none; 
+        background-color: #6c757d; 
+        color: white; 
+        padding: 5px 15px; 
+        border-radius: 5px; 
+        font-size: 14px;
+        transition: background 0.3s;
+        }
+        .home-btn:hover { background-color: #5a6268; }
+    </style>
+</head>
+<body>
+
+<div class="content-wrapper">
+    <h1>ມື້ນີ້ໄປນັ່ງຫຼິ້ນຮ້ານຫຍັງດີ?</h1>
+    <div id="slot">ກົດປຸ່ມດ້ານລຸ່ມເພື່ອເລືອກ!</div>
+    <button class="spin-btn" onclick="spin()">ກົດເລືອກເລີຍ!</button>
+
+    <div class="manage-section">
+        <h3>ຈັດການລາຍຊື່ຮ້ານ</h3>
+        <div class="input-group">
+            <input type="text" id="newRes" placeholder="ເພີ່ມຮ້ານໃໝ່...">
+            <button onclick="addRestaurant()">ເພີ່ມ</button>
+        </div>
+        <ul id="resList"></ul>
+    </div>
+    <!-- ວາງລະຫັດ Hitwebcounter ໄວ້ບ່ອນນີ້ -->
+    <div style="margin-top: 20px; font-size: 12px; color: #666;">
+        ຈຳນວນຜູ້ເຂົ້າຊົມ:
+        <br>
+        <!-- hitwebcounter Code START -->
+        <a href="https://www.hitwebcounter.com/" target="_blank" rel="noopener" title="hitwebcounter.com/">
+        <img src="https://www.hitwebcounter.com/counter/counter.php?page=21511399&amp;style=0001&amp;nbdigits=5&amp;type=page" alt="hitwebcounter.com/" decoding="async" style="border:0;max-width:100%;height:auto;" />
+        </a>
+        <!-- hitwebcounter Code END -->
+    </div>
+    <div class="content-wrapper">
+    <!-- ເພີ່ມປຸ່ມນີ້ເຂົ້າໄປ -->
+    <a href="index.html" class="home-btn">⬅️ ໜ້າຫຼັກ</a>
+</div>
+</div>
+
+<script>
+    const defaultRestaurants = [
+        "🌙 ຮ້ານ Day2Night", 
+        "🍺 ຮ້ານ ຂອບໃຈເດີ້", 
+        "🎸 ຮ້ານ Naked Garden ໂພນຕ້ອງ", 
+        "🍷 ຮ້ານ The Galloria ສາຍລົມ", 
+        "🥂 ຮ້ານ Hang Out", 
+        "🍹 ຮ້ານ 20 ແຄັມ",
+        "🍗 ຮ້ານ Bravo chicken",
+        "🍔 ຮ້ານ Relax",
+    ];
+    let restaurants = JSON.parse(localStorage.getItem('myLunchList')) || defaultRestaurants;
+
+    function saveData() { localStorage.setItem('myLunchList', JSON.stringify(restaurants)); }
+
+    function renderList() {
+        const list = document.getElementById('resList');
+        list.innerHTML = '';
+        restaurants.forEach((res, index) => {
+            list.innerHTML += `
+                <li>
+                    <span>${res}</span>
+                    <div>
+                        <button class="edit-btn" onclick="editRestaurant(${index})">ແກ້ໄຂ</button>
+                        <button class="del-btn" onclick="removeRestaurant(${index})">ລຶບ</button>
+                    </div>
+                </li>`;
+        });
+    }
+
+    function addRestaurant() {
+        const input = document.getElementById('newRes');
+        if (input.value.trim()) {
+            restaurants.push(input.value.trim());
+            saveData();
+            input.value = '';
+            renderList();
+        }
+    }
+
+    function editRestaurant(index) {
+        const newName = prompt("ແກ້ໄຂຊື່ຮ້ານ:", restaurants[index]);
+        if (newName !== null && newName.trim() !== "") {
+            restaurants[index] = newName.trim();
+            saveData();
+            renderList();
+        }
+    }
+
+    function removeRestaurant(index) {
+        if(confirm("ເຈົ້າແນ່ໃຈບໍ່ວ່າຈະລຶບຮ້ານນີ້?")) {
+            restaurants.splice(index, 1);
+            saveData();
+            renderList();
+        }
+    }
+
+    function spin() {
+        if(restaurants.length === 0) { alert("ກະລຸນາເພີ່ມຮ້ານອາຫານກ່ອນ!"); return; }
+        let count = 0;
+        let slotEl = document.getElementById('slot');
+        let interval = setInterval(() => {
+            slotEl.innerText = restaurants[Math.floor(Math.random() * restaurants.length)];
+            count++;
+            if (count > 15) { clearInterval(interval); }
+        }, 80);
+    }
+
+    renderList();
+</script>
+</body>
+</html>

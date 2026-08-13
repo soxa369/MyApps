@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Menu</title>
+    <style>
+        body { 
+            font-family: 'Saysettha OT', 'Phetsarath OT', Arial, sans-serif; 
+            text-align: center; padding: 20px;
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .content-wrapper { 
+            background-color: rgba(255, 255, 255, 0.92); padding: 50px; border-radius: 15px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 90%;
+        }
+        h1 { color: #333; margin-bottom: 30px; }
+        .nav-btn { 
+            display: inline-block; /* ປ່ຽນຈາກ block ເປັນ inline-block */
+            width: 250px;          /* ກຳນົດຄວາມກວ້າງໃຫ້ພໍດີ */
+            padding: 15px 20px;
+            margin: 10px auto;     /* auto ຈະຊ່ວຍໃຫ້ມັນຢູ່ກາງ */
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+        .btn-entertainment { background-color: #ff4500; }
+        .btn-lunch { background-color: #28a745; }
+    </style>
+</head>
+<body>
+
+<div class="content-wrapper">
+    <h1>ຍິນດີຕ້ອນຮັບ!</h1>
+    <p>ມື້ນີ້ເຈົ້າຢາກເລືອກອັນໃດ?</p>
+    
+    <a href="entertainment.html" class="nav-btn btn-entertainment">ໄປນັ່ງຫຼິ້ນໃສ່ດີ?</a>
+    <a href="lunch.html" class="nav-btn btn-lunch">ກິນຫຍັງດີ?</a>
+</div>
+
+</body>
+</html>
